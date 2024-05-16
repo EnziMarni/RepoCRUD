@@ -69,6 +69,7 @@ class DokumenController extends Controller
             'tanggal_dokumen' => 'required|date',
             'dokumen_file' => 'nullable|file|mimes:pdf,docx,jpeg,png,jpg|max:2048',
             'tags' => 'nullable|string',
+            
         ]);
         if ($request->hasFile('edit_dokumen_file')) {
             // Handle file upload
@@ -85,12 +86,18 @@ class DokumenController extends Controller
     }
     // DokumenController.php
 
-public function destroy($id)
-{
-    $dokumen = Dokumen::findOrFail($id);
-    $dokumen->delete();
+    public function destroy($id)
+    {
+        $document = Dokumen::find($id);
+        if ($document) {
+            
+            $document->save();
 
-    return redirect()->route('list-dokumen')->with('success', 'Dokumen berhasil dihapus.');
-}
+            return redirect()->route('list-dokumen')->with('success', 'Dokumen berhasil dihapus');
+        }
+
+        return back()->withErrors('Dokumen tidak ditemukan');
+    }
+   
 
 };
